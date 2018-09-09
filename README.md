@@ -1,4 +1,4 @@
-# TuriBot
+# Core
 # Intro
 
 [![Donate](https://img.shields.io/badge/%F0%9F%92%99-Donate-blue.svg)](https://www.paypal.me/davtur19)
@@ -9,7 +9,7 @@ Documentation is only in Italian at the moment
 
 # Guida
 ## Setup
-1. Caricare i file su un webserver o usare `git clone https://github.com/davtur19/TuriBot.git NomeCartella`
+1. Caricare i file su un webserver o usare `git clone https://github.com/dxt3r/Core.git NomeCartella`
 
 1. Aprire setup.php e seguire la procedura per settare il webhook, oppure settare il webhook manualmente a SITO/commands.php?api=TOKEN
 
@@ -287,6 +287,4 @@ Questa è la divisione delle varie funzioni nei file, sono chiamate con lo stess
             setWebhook
 ```
 
-# Gruppo Telegram
 
-[Entra](https://t.me/joinchat/AYMfl0mfCUqPCjGcDJXl6Q)
