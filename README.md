@@ -1,61 +1,58 @@
 # Core
 # Intro
 
-[![Donate](https://img.shields.io/badge/%F0%9F%92%99-Donate-blue.svg)](https://www.paypal.me/davtur19)
+Core is a simple way to communicate with Telegram APIs in PHP
 
-TuriBot is a simple way to communicate with Telegram APIs in PHP
 
-Documentation is only in Italian at the moment
-
-# Guida
+# Guide
 ## Setup
-1. Caricare i file su un webserver o usare `git clone https://github.com/dxt3r/Core.git NomeCartella`
+1. Upload files to a webserver or use `git clone https://github.com/dxt3r/Core.git NomeCartella`
 
-1. Aprire setup.php e seguire la procedura per settare il webhook, oppure settare il webhook manualmente a SITO/commands.php?api=TOKEN
+1. Open setup.php and follow the procedure to set up the webhook, or set the webhook manually at the SITE/commands.php?api=TOKEN
 
-1. Editare config.php e settare come descritto dai commenti.
+1. Edit config.php and set as described in the comments.
 
-1. Editare commands.php e fare il proprio bot.
+1. Edit commands.php and make your own bot.
 
 ## CronJob
 
-Per usare i cronjob basterà creare un file a parte e inculudere base_functions.php per avere tutte le funzioni base.
+To use cronjob, just create a separate file and inculude base_functions.php to get all the basic functions.To use cronjob, just create a separate file and inculude base_functions.php to get all the basic functions.
 
-## Attenzione⚠️
-Il bot genera automaticamente le variabili ricevute dal update, è consigliato leggere attentamente la documentazione e usare bot_debug.php per capire come funziona (è da sostituire in commands.php, da `require_once(bot.php);` a `require_once(bot_debug.php);`)
+## Caution ⚠️
+The bot automatically generates the variables received from the update, it is recommended to read the documentation carefully and use bot_debug.php to understand how it works (it must be replaced in commands.php, from `require_once (bot.php);` a `require_once (bot_debug. php); `)
 
-Nel file `bot_debug.php` sostituire `1111` con il proprio id in questa riga `define("MYID", "1111");` , altrimenti sarà solo molto lento ⚠️
+In the `bot_debug.php` file, replace` 1111` with your id in this line `define (" MYID "," 1111 ");`, otherwise it will only be very slow ⚠️
 
-Siccome il bot genera le variabili in base al contenuto del update ricevuto, una eventuale variabile mancante genererà errori se non gestita correttamente siccome essa sarà NULL
-(Es: $text non esisterà se il bot riceverà una foto)
+As the bot generates the variables based on the content of the received update, a missing variable will generate errors if not handled correctly as it will be NULL
+(EX: $text will not exist if the bot will receive a photo)
 
-Il json payload è di default disabilitato perchè potrebbe dare problemi con determinate configurazione di rete o del server, in caso si voglia usare leggere attentamente quanto riportato qui sotto (anche un occhiata alle api Telegram di come funziona il json payload non farebbe male)
+The json payload is disabled by default because it could give problems with certain network configuration or server, in case you want to use carefully read what is below (even a look at the Telegram bees of how the json payload would not hurt)
 
-Il bot per essere più veloce usa json payload, per questo per alcune funzioni se si vuole ottenere la risposta da Telegram bisognerà specificare un parametro in più. Ciò viene fatto solo sulla prima funzione che viene eseguita dal update ricevuto ma solo con quelle che supportano il json payload, quelle che devono fare file upload o servono solo a ottenere informazioni non lo useranno.
+The bot to be faster uses json payload, so for some functions if you want to get the answer from Telegram you will need to specify one more parameter. This is done only on the first function that is performed by the update received but only with those that support the json payload, those that have to do file upload or serve only to obtain information will not use it.
 
-⚠️ Con alcune configurazioni il json payload potrebbe non funzionare correttamente ed essere eseguito per ultimo, se così fosse forzare l'utilizzo della richiesta post mettendo il parametro `$response` a `true` come da esempio.
+⚠️ With some configurations the json payload may not work properly and run last, if it were to force the use of the post request by putting the `$ response` parameter to` true` as an example.
 
-Esempio: `$risposta = sendMessage(...); $risposta = true` mentre così `$risposta = sendMessage(..., true); $risposta = array di risposta da Telegram`. Una `sendPhoto` usando un file invece di `file_id` o `link` userà in automatico la richiesta post. 
+Example: `$risposta = sendMessage(...); $risposta = true` while so `$risposta = sendMessage(..., true); $risposta = array di risposta da Telegram`. A `sendPhoto` using a file instead of `file_id` o `link` will automatically use the post request.
 
-## Nomi delle variabili
-I nomi delle variabili sono create in modo dinamico e esse esisteranno solo se presenti nel update ricevuto da Telegram. Come nomi hanno gli stessi campi degli array mandati dalle richieste di update tramite webhook di Telegram. Inoltre la prima dimensione del array viene esclusa per creare i nomi delle variabili che sono separate da un underscore.
+## Variable names
+Variable names are created dynamically and they will exist only if present in the update received from Telegram. As names, they have the same array fields sent by update requests via Telegram's webhook. In addition, the first dimension of the array is excluded to create the names of the variables that are separated by an underscore.
 
-Nonostante la prima dimesione dell'array non venga usata per creare i nomi delle variabili, è possibile usare $message, $edited_message, $channel_post, ecc... per distinguere i vari messaggi, ad esempio per capire se il messaggio ricevuto è un messaggio normale o modificato.
-(Vedere qua per i nomi: https://core.telegram.org/bots/api#update)
+Although the first dimension of the array is not used to create variable names, you can use $message, $edited_message, $channel_post, etc ... to distinguish the various messages, for example to understand if the message received is a message normal or modified.
+(See here for the names: https://core.telegram.org/bots/api#update)
 
-Possono essere usati anche i nomi delle variabili non completi
+The names of the incomplete variables can also be used
 
-Per esempio:
-$chat_id conterrà 'id' che è all'interno del array di 'chat'.
-Mentre facendo solo $chat conterrà l'array di 'chat'.
-(Per maggiori info sui nomi guardare le api di Telegram https://core.telegram.org/bots/api#chat)
+For example:
+$chat_id it will contain 'id' which is inside the array of 'chat'.
+it will contain 'id' which is inside the array of...
+(For more info on the names look at the bees of Telegram https://core.telegram.org/bots/api#chat)
 
-## Funzionamento del bot:
-1. Quando il bot riceve un messaggio, Telegram manda un json come quello qua sotto, alla pagina a cui è settato il webhook.
-1. Poi questo json viene decodificato e messo nella variabile $update che sarà un array come quello qua sotto.
-1. Dopodichè vengono create le variabili usando i campi del array e vengono separati da un underscore, tranne per la prima dimensionde del array (ovvero i campi di update come update_id, message, edited_message, channel_post, ecc..).
+## Bot operation:
+1. When the bot receives a message, Telegram sends a json like the one below, to the page to which the webhook is set.
+1. Then this json is decoded and put into the $ update variable which will be an array like the one below.
+1. After that the variables are created using the array fields and are separated by an underscore, except for the first dimension of the array (ie update fields like update_id, message, edited_message, channel_post, etc.).
 
-Json mandato da Telegram
+Json sent by Telegram
 ```
 {
 "update_id":10000,
@@ -78,7 +75,7 @@ Json mandato da Telegram
 }
 }
 ```
-Contenuto di $update
+Content of $update
 ```
 array(2) {
   ["update_id"]=>
@@ -116,7 +113,7 @@ array(2) {
   }
 }
 ```
-Esempio di alcune variabili seguendo l'array usato sopra
+Example of some variables following the array used above
 ```
 $chat
 ["chat"]=>
@@ -173,16 +170,16 @@ $message
     string(6) "/start"
   }
 ```
-## Divisione dei file
-Nella directory principale troviamo:
-* bot.php è il file principale che elabora gli update e richiama i file con all'interno le varie funzioni.
-* bot_debug.php è il file che permette di mandare tutte le variabili create nella chat con il bot, così da poter fare un debug e capire meglio il funzionamento di esso (per usarlo è da sostituire nel require_once in commands.php).
-* commands.php è un file di esempio con dei comandi base per il bot, a cui va settato il webhook.
-* functions è la cartella con le varie funzioni.
-* setup.php serve solo per settare il webhook in modo facile.
-* LICENSE il file con la licenza (GNU Affero General Public License v3.0).
+## Division of files
+In the main directory we find:
+* bot.php is the main file that processes updates and retrieves files with various functions.
+* bot_debug.php is the file that allows you to send all the variables created in the chat with the bot, so you can debug and better understand how it works (to use it is to be replaced in require_once in commands.php).
+* commands.php is a sample file with basic commands for the bot, to which the webhook should be set.
+* functions is the folder with the various functions.
+* setup.php is only needed to set up the webhook in an easy way.
+* LICENSE the file with the license (GNU Affero General Public License v3.0).
 
-Questa è la divisione delle varie funzioni nei file, sono chiamate con lo stesso nome dei metodi disponibili di Telegram
+This is the division of the various functions into the files, they are called with the same name as the available Telegram methods
 ```
 /bot
 |   base_functions.php
